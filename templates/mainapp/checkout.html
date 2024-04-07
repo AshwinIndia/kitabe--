@@ -1,0 +1,38 @@
+<!-- <form method="post" action="{% url 'place_order' %}">
+    {% csrf_token %}
+    Shipping information fields -->
+    <!-- <input type="text" name="address" placeholder="Shipping Address"> -->
+    <!-- Other fields as needed -->
+  
+    <!-- Cart contents
+    {% for item in cart_items %}
+      <div>
+        <h3>{{ item.book.title }}</h3>
+        <p>Quantity: {{ item.quantity }}</p>
+        <p>Price: {{ item.price }}</p>
+      </div>
+    {% endfor %} -->
+  
+    <!-- <button type="submit">Place Order</button>
+  </form> -->
+  
+  <form method="post" action="{% url 'place_order' %}">
+    {% csrf_token %}
+    <!-- Shipping information fields -->
+    <input type="text" name="address" placeholder="Shipping Address">
+    <!-- Other fields as needed -->
+
+    <!-- Cart contents -->
+    <h2>Cart Contents</h2>
+    <ul>
+        {% for item in cart_items %}
+        <li>
+            <h3>{{ item.book.title }}</h3>
+            <p>Quantity: {{ item.quantity }}</p>
+            <p>Price: {{ item.price }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <button type="submit">Place Order</button>
+</form>

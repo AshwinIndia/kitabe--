@@ -1,0 +1,108 @@
+<!-- {% for item in cart_items %}
+  <div>
+    <h3>{{ item.book.title }}</h3>
+    <p>Quantity: {{ item.quantity }}</p>
+    <p>Price: {{ item.price }}</p>
+    <form method="post" action="{% url 'update_cart_item' item.id %}">
+      {% csrf_token %}
+      <input type="number" name="quantity" value="{{ item.quantity }}">
+      <button type="submit">Update</button>
+    </form>
+    <form method="post" action="{% url 'remove_from_cart' item.id %}">
+      {% csrf_token %}
+      <button type="submit">Remove</button>
+    </form>
+  </div>
+{% endfor %} -->
+
+
+
+<!-- New CHANGED -->
+{% for item in cart_items %}
+<div>
+    <h3>{{ item.book.title }}</h3>
+    <p>Quantity: <span id="quantity-{{ item.id }}">{{ item.quantity }}</span></p>
+    <p>Price: {{ item.price }}</p>
+    <div class="cart-item-actions">
+        <input type="number" id="input-{{ item.id }}" value="{{ item.quantity }}">
+        <button class="update-cart-item" data-item-id="{{ item.id }}">Update</button>
+        <button class="remove-from-cart" data-item-id="{{ item.id }}">Remove</button>
+    </div>
+</div>
+{% endfor %}
+
+<button id="checkout-button">Checkout</button>
+
+{% block script %}
+{{ block.super }}
+<script>
+    $(document).ready(function() {
+        $(".update-cart-item").click(function() {
+            var itemId = $(this).data("item-id");
+            var quantity = $("#input-" + itemId).val();
+            updateCartItem(itemId, quantity);
+        });
+
+        $(".remove-from-cart").click(function() {
+            var itemId = $(this).data("item-id");
+            removeFromCart(itemId);
+        });
+
+        $("#checkout-button").click(function() {
+            processCheckout();
+        });
+
+        function updateCartItem(itemId, quantity) {
+            $.ajax({
+                url: "{% url 'update_cart_item' itemId %}",
+                type: "POST",
+                data: {
+                    quantity: quantity,
+                    csrfmiddlewaretoken: Cookies.get('csrftoken')
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $("#quantity-" + itemId).text(quantity);
+                        alert("Cart updated successfully.");
+                    } else {
+                        alert("Failed to update cart.");
+                    }
+                }
+            });
+        }
+
+        function removeFromCart(itemId) {
+            $.ajax({
+                url: "{% url 'remove_from_cart' itemId %}",
+                type: "POST",
+                data: {
+                    csrfmiddlewaretoken: Cookies.get('csrftoken')
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert("Item removed from cart.");
+                        location.reload();
+                    } else {
+                        alert("Failed to remove item from cart.");
+                    }
+                }
+            });
+        }
+
+        function processCheckout() {
+            $.ajax({
+                url: "{% url 'checkout' %}",
+                type: "POST",
+                success: function(response) {
+                    if (response.success) {
+                        alert("Checkout successful!");
+                        location.reload();
+                    } else {
+                        alert("Checkout failed. Please try again.");
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock script %}

@@ -1,0 +1,11 @@
+{% for order in orders %}
+  <div>
+    <h3>Order ID: {{ order.id }}</h3>
+    <p>Date: {{ order.date_ordered }}</p>
+    <!-- List of items in the order -->
+    {% for item in order.orderitem_set.all %}
+      <p>{{ item.book.title }} - Quantity: {{ item.quantity }} - Price: {{ item.price }}</p>
+    {% endfor %}
+    <p>Total Amount: {{ order.total_amount }}</p>
+  </div>
+{% endfor %}

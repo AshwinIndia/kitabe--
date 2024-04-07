@@ -1,0 +1,16 @@
+<form method="post" action="{% url 'process_payment' %}">
+    {% csrf_token %}
+    <!-- Payment method selection -->
+    <select name="payment_method">
+      <option value="credit_card">Credit Card</option>
+      <option value="paypal">PayPal</option>
+      <option value="cash">Cash on Delivery</option>
+      <!-- Add more options as needed -->
+    </select>
+    
+    <!-- Payment information fields -->
+    <!-- Credit card number, expiration date, CVV, etc. -->
+  
+    <button type="submit">Pay Now</button>
+  </form>
+  
